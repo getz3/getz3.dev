@@ -1,0 +1,133 @@
+name: Vercel Deploy
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'Production' || github.event_name == 'push' && github.ref_name == 'dev' && 'Staging' || 'PR Preview' }}
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install
+
+      - name: Select deployment target
+        id: target
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref_name }}" = "main" ]; then
+            echo "build_command=pnpm generate:prod" >> "$GITHUB_OUTPUT"
+            echo "alias_domain=getz3.dev" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref_name }}" = "dev" ]; then
+            echo "build_command=pnpm generate:staging" >> "$GITHUB_OUTPUT"
+            echo "alias_domain=staging.getz3.dev" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.base_ref }}" = "main" ]; then
+            echo "build_command=pnpm generate:staging" >> "$GITHUB_OUTPUT"
+            echo "alias_domain=" >> "$GITHUB_OUTPUT"
+          else
+            echo "build_command=pnpm generate:staging" >> "$GITHUB_OUTPUT"
+            echo "alias_domain=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build
+        run: ${{ steps.target.outputs.build_command }}
+
+      - name: Override git author for Vercel
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git commit --allow-empty -m "deploy"
+
+      - name: Prepare Vercel output
+        run: |
+          rm -rf .vercel/output
+          mkdir -p .vercel/output/static
+          echo '{"version": 3}' > .vercel/output/config.json
+          cp -R .output/public/. .vercel/output/static/
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          if [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "Missing Vercel project id" >&2
+            exit 1
+          fi
+
+          DEPLOY_OUTPUT=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN" --yes --format json)
+          URL=$(node -e '
+            const fs = require("node:fs")
+            const input = fs.readFileSync(0, "utf8").trim()
+            try {
+              const data = JSON.parse(input)
+              process.stdout.write(data.deployment?.url || data.url || "")
+            } catch {
+              const urls = input.match(/https?:\/\/[^\\s]+/g) || []
+              process.stdout.write(urls.at(-1) || input)
+            }
+          ' <<< "$DEPLOY_OUTPUT")
+
+          if [ -z "$URL" ]; then
+            echo "Unable to determine Vercel deployment URL" >&2
+            echo "$DEPLOY_OUTPUT" >&2
+            exit 1
+          fi
+
+          if [ -n "${{ steps.target.outputs.alias_domain }}" ]; then
+            vercel alias set "$URL" "${{ steps.target.outputs.alias_domain }}" --token="$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
+            URL="https://${{ steps.target.outputs.alias_domain }}"
+          fi
+
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.deploy.outputs.url }}';
+            const body = `**Vercel Preview:** ${url}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.body.includes('Vercel Preview:'));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

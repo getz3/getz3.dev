@@ -4,11 +4,11 @@ Website for the [Z3](https://github.com/getz3/z3) project.
 
 ## Environments
 
-| Environment | URL                            | Notes                            |
-| ----------- | ------------------------------ | -------------------------------- |
-| Production  | <https://getz3.dev>            | Reserved; final hosting TBD      |
-| Staging     | <https://getz3-dev.vercel.app> | Updated when `dev` is deployed   |
-| PR Preview  | Generated per pull request     | Posted as a pull request comment |
+| Environment | URL                         | Notes                        |
+| ----------- | --------------------------- | ---------------------------- |
+| Production  | <https://getz3.dev>         | Public site                  |
+| Staging     | <https://staging.getz3.dev> | Preview of the `dev` branch  |
+| PR Preview  | Generated per pull request  | Temporary preview for review |
 
 ## Tech Stack
 
@@ -50,31 +50,17 @@ pnpm typecheck
 # Static build
 pnpm generate
 
-# Staging build used by GitHub Actions
-pnpm generate:test
+# Staging build
+pnpm generate:staging
+
+# Production build
+pnpm generate:prod
 
 # Preview generated output
 pnpm preview
 ```
 
 Output: `.output/public/`
-
-## Branching & Preview Deploy
-
-| Branch    | Purpose                  | Deploy                                  |
-| --------- | ------------------------ | --------------------------------------- |
-| `dev`     | Staging / default branch | GitHub Action deploys to Vercel         |
-| `main`    | Production placeholder   | To be confirmed after the site is ready |
-| `codex/*` | Working branches         | PR to `dev`, CI + Vercel preview        |
-
-Pull requests to `dev` run CI and create a temporary Vercel preview through GitHub Actions. Merges to `dev` update the fixed dev URL. The workflow builds locally in Actions, prepares `.vercel/output/static`, and deploys with `vercel deploy --prebuilt`.
-
-### Workflow
-
-1. Create a working branch from `dev`
-2. PR to `dev` -> CI checks + Vercel preview
-3. Merge to `dev` -> fixed staging deploy updates
-4. Production deploy path is decided after the site is ready
 
 ## Project Structure
 

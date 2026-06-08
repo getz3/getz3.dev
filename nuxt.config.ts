@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 
 const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'https://getz3.dev'
-const isProductionIndexable = process.env.VERCEL_ENV === 'production' || process.env.ROBOTS_SITE_ENV === 'production'
+const isProductionIndexable = process.env.ROBOTS_SITE_ENV === 'production'
 
 export default defineNuxtConfig({
   devtools: {
@@ -82,7 +82,7 @@ export default defineNuxtConfig({
   },
 
   robots: {
-    disallow: isProductionIndexable ? [] : ['/'],
+    sitemap: isProductionIndexable ? ['/sitemap.xml'] : [],
   },
 
   sitemap: {
@@ -90,6 +90,7 @@ export default defineNuxtConfig({
     defaults: {
       changefreq: 'weekly',
     },
+    exclude: isProductionIndexable ? [] : ['/**'],
   },
 
   vite: {
