@@ -12,6 +12,9 @@ export default defineNuxtConfig({
     head: {
       title: 'Z3',
       titleTemplate: '%s | Z3',
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/z3-icon.svg' },
+      ],
       meta: [
         { charset: 'utf-8' },
         {
@@ -66,10 +69,22 @@ export default defineNuxtConfig({
     clientBundle: {
       icons: [
         'lucide:arrow-up-right',
-        'lucide:box',
-        'lucide:check-circle-2',
+        'lucide:book-open',
+        'lucide:boxes',
+        'lucide:check',
+        'lucide:circle-dashed',
+        'lucide:copy',
+        'lucide:folder',
         'lucide:github',
+        'lucide:key-round',
+        'lucide:lock',
+        'lucide:scale',
+        'lucide:server',
+        'lucide:shield-check',
         'lucide:terminal',
+        'lucide:workflow',
+        'lucide:zap',
+        'simple-icons:python',
         'simple-icons:zig',
       ],
     },
