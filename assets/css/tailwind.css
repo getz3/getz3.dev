@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+:root {
+  --ui-radius: 0.5rem;
+  --site-bg: #f8f7f4;
+  --site-ink: #25221f;
+  --site-muted: #6f6962;
+  --site-zig: #ffaa3b;
+}
+
+html {
+  background: var(--site-bg);
+  color: var(--site-ink);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  background: linear-gradient(180deg, rgba(255, 170, 59, 0.14), rgba(255, 255, 255, 0) 32rem), var(--site-bg);
+}
+
+@layer components {
+  .site-container {
+    width: min(100% - 2rem, 1120px);
+    margin-inline: auto;
+  }
+}
