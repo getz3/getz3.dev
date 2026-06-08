@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=$(cat | jq -r '.tool_input.file_path // empty') && case \"$file\" in *.js|*.jsx|*.ts|*.tsx|*.vue) [ -f \"$file\" ] && npx eslint --fix \"$file\" 2>&1 | tail -5 ;; esac"
+          }
+        ]
+      }
+    ]
+  }
+}
