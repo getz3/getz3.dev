@@ -29,4 +29,4 @@ jobs:
         run: pnpm typecheck
 
       - name: Build
-        run: pnpm generate:test
+        run: pnpm generate:staging
