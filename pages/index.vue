@@ -33,8 +33,8 @@ const buildLines = [
 ]
 
 const awsLines = [
-  'export AWS_ACCESS_KEY_ID=minioadmin',
-  'export AWS_SECRET_ACCESS_KEY=minioadmin',
+  'export AWS_ACCESS_KEY_ID=z3admin',
+  'export AWS_SECRET_ACCESS_KEY=z3admin',
   '',
   'aws --endpoint-url http://localhost:9000 s3 mb s3://mybucket',
   'aws --endpoint-url http://localhost:9000 s3 cp file.txt s3://mybucket/',
@@ -48,8 +48,8 @@ const botoLines = [
   '',
   's3 = boto3.client(\'s3\',',
   '    endpoint_url=\'http://localhost:9000\',',
-  '    aws_access_key_id=\'minioadmin\',',
-  '    aws_secret_access_key=\'minioadmin\'',
+  '    aws_access_key_id=\'z3admin\',',
+  '    aws_secret_access_key=\'z3admin\'',
   ')',
   '',
   's3.create_bucket(Bucket=\'test\')',
@@ -60,7 +60,7 @@ const botoLines = [
 const facts = [
   { icon: 'lucide:server', label: 'Endpoint', value: 'http://localhost:9000' },
   { icon: 'lucide:folder', label: 'Data Directory', value: './data' },
-  { icon: 'lucide:key-round', label: 'Default Credentials', value: 'minioadmin / minioadmin' },
+  { icon: 'lucide:key-round', label: 'Default Credentials', value: 'z3admin / z3admin' },
 ]
 
 const supported = [
