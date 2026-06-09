@@ -1,13 +1,6 @@
 <script setup lang="ts">
 const repoUrl = 'https://github.com/getz3/z3'
 
-const navLinks = [
-  { label: 'Quick Start', href: '#quick-start' },
-  { label: 'Usage', href: '#usage' },
-  { label: 'Capabilities', href: '#capabilities' },
-  { label: 'FAQs', href: '#faq' },
-]
-
 const features = [
   {
     icon: 'lucide:maximize-2',
@@ -138,23 +131,6 @@ useSeoMeta({
           >
           <span class="text-lg font-bold tracking-tight">Z3</span>
         </NuxtLink>
-
-        <nav
-          class="
-            hidden items-center gap-7 text-sm font-medium text-(--site-muted)
-            md:flex
-          " aria-label="Page sections"
-        >
-          <a
-            v-for="link in navLinks"
-            :key="link.href"
-            :href="link.href"
-            class="
-              transition-colors
-              hover:text-(--site-ink)
-            "
-          >{{ link.label }}</a>
-        </nav>
 
         <div class="flex items-center gap-2">
           <UButton
