@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z3 - Minimalist S3 server in Zig</title>
+    <meta name="description" content="Z3 is an extremely small and fast minimalist S3 server written in Zig. Ideal for S3 development and testing.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zig: {
+                            DEFAULT: '#F7A41D',
+                            dark: '#E0951A',
+                            light: '#F9B74B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for code blocks */
+        pre::-webkit-scrollbar {
+            height: 8px;
+        }
+        pre::-webkit-scrollbar-track {
+            background: #1f2937; 
+            border-radius: 4px;
+        }
+        pre::-webkit-scrollbar-thumb {
+            background: #4b5563; 
+            border-radius: 4px;
+        }
+        pre::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; 
+        }
+    </style>
+</head>
+<body class="bg-neutral-50 text-neutral-900 antialiased selection:bg-zig selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-neutral-50/80 backdrop-blur-md border-b border-neutral-200">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-zig rounded flex items-center justify-center text-white font-bold text-lg leading-none pt-0.5">Z</div>
+                <span class="font-bold text-xl tracking-tight">Z3</span>
+            </div>
+            <div class="flex items-center gap-6 text-sm font-medium">
+                <a href="https://github.com/getz3/z3" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-neutral-900 hover:text-zig transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="hidden sm:inline">GitHub</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-5xl mx-auto px-6 py-20 md:py-32 flex flex-col items-start">
+        
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-neutral-900 mb-6 leading-tight">
+            Meet <span class="text-zig">Z3</span>
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-neutral-600 mb-10 max-w-2xl leading-relaxed">
+            Minimalist S3 server in Zig with No AI slop.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <a href="#quick-start" class="inline-flex justify-center items-center px-6 py-3.5 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 transition-colors">
+                Quick Start
+            </a>
+            <a href="https://github.com/getz3/z3" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center px-6 py-3.5 border border-neutral-300 shadow-sm text-base font-medium rounded-lg text-neutral-700 bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 transition-colors">
+                View Source
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-6 py-12 space-y-24">
+
+        <!-- Why Z3 Grid -->
+        <section id="why-z3">
+            <div class="mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Z3?</h2>
+                <p class="text-neutral-600 text-lg md:text-xl max-w-2xl">Built for the ultimate minimalist S3 experience.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Small -->
+                <div class="bg-white p-8 rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 rounded-xl bg-zig/10 flex items-center justify-center text-zig mb-6">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-neutral-900">Small</h3>
+                    <p class="text-neutral-600 leading-relaxed">Extremely small boot footprint, using less than 2MB of memory.</p>
+                </div>
+                
+                <!-- Fast -->
+                <div class="bg-white p-8 rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 rounded-xl bg-zig/10 flex items-center justify-center text-zig mb-6">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-neutral-900">Fast</h3>
+                    <p class="text-neutral-600 leading-relaxed">Blazing-fast performance powered by Zig and Async ZIO.</p>
+                </div>
+
+                <!-- Clean -->
+                <div class="bg-white p-8 rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 rounded-xl bg-zig/10 flex items-center justify-center text-zig mb-6">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-neutral-900">Clean</h3>
+                    <p class="text-neutral-600 leading-relaxed">Built on a multi-role finite state machine with no AI slop.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-neutral-200">
+
+        <!-- Quick Start -->
+        <section id="quick-start">
+            <h2 class="text-3xl font-bold mb-6">Quick Start</h2>
+            
+            <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-xl border border-neutral-800 my-6">
+                <div class="flex items-center justify-between px-4 py-3 bg-[#2d2d2d] border-b border-neutral-800">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="text-xs text-neutral-400 font-mono">bash</div>
+                    <button class="copy-btn text-neutral-400 hover:text-white transition-colors" data-code="quick-start-code" aria-label="Copy code">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </button>
+                </div>
+                <div class="p-5 overflow-x-auto">
+<pre id="quick-start-code" class="text-neutral-300 text-sm font-mono leading-relaxed">
+<span class="text-neutral-500"># Build</span>
+<span class="text-zig">zig build</span> -Doptimize=ReleaseFast
+
+<span class="text-neutral-500"># Run</span>
+./zig-out/bin/z3
+
+<span class="text-neutral-500"># Options</span>
+./zig-out/bin/z3 --port=9000 --data-dir=./data --tmp=./tmp
+</pre>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 text-sm">
+                <div class="p-4 bg-white rounded-lg border border-neutral-200 shadow-sm">
+                    <span class="block text-neutral-500 mb-1">Server URL</span>
+                    <strong class="text-neutral-900 font-mono">http://localhost:9000</strong>
+                </div>
+                <div class="p-4 bg-white rounded-lg border border-neutral-200 shadow-sm">
+                    <span class="block text-neutral-500 mb-1">Data Storage</span>
+                    <strong class="text-neutral-900 font-mono">./data</strong>
+                </div>
+                <div class="p-4 bg-white rounded-lg border border-neutral-200 shadow-sm">
+                    <span class="block text-neutral-500 mb-1">Default Credentials</span>
+                    <strong class="text-neutral-900 font-mono">minioadmin / minioadmin</strong>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-neutral-200">
+
+        <!-- Usage -->
+        <section id="usage">
+            <h2 class="text-3xl font-bold mb-8">Usage Examples</h2>
+
+            <div class="space-y-10">
+                <!-- AWS CLI -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        AWS CLI
+                    </h3>
+                    <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-md border border-neutral-800">
+                        <div class="flex items-center justify-between px-4 py-2 bg-[#2d2d2d] border-b border-neutral-800">
+                            <div class="text-xs text-neutral-400 font-mono">bash</div>
+                            <button class="copy-btn text-neutral-400 hover:text-white" data-code="aws-cli-code" aria-label="Copy code">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-5 overflow-x-auto">
+<pre id="aws-cli-code" class="text-neutral-300 text-sm font-mono leading-relaxed">
+<span class="text-pink-400">export</span> AWS_ACCESS_KEY_ID=minioadmin
+<span class="text-pink-400">export</span> AWS_SECRET_ACCESS_KEY=minioadmin
+
+<span class="text-neutral-500"># Create a bucket</span>
+aws --endpoint-url http://localhost:9000 s3 mb s3://mybucket
+
+<span class="text-neutral-500"># Upload a file</span>
+aws --endpoint-url http://localhost:9000 s3 cp file.txt s3://mybucket/
+
+<span class="text-neutral-500"># List contents</span>
+aws --endpoint-url http://localhost:9000 s3 ls s3://mybucket/ --recursive
+
+<span class="text-neutral-500"># Download a file</span>
+aws --endpoint-url http://localhost:9000 s3 cp s3://mybucket/file.txt ./
+
+<span class="text-neutral-500"># Delete a file</span>
+aws --endpoint-url http://localhost:9000 s3 rm s3://mybucket/file.txt
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boto3 -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        Python (boto3)
+                    </h3>
+                    <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-md border border-neutral-800">
+                        <div class="flex items-center justify-between px-4 py-2 bg-[#2d2d2d] border-b border-neutral-800">
+                            <div class="text-xs text-neutral-400 font-mono">python</div>
+                            <button class="copy-btn text-neutral-400 hover:text-white" data-code="boto-code" aria-label="Copy code">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-5 overflow-x-auto">
+<pre id="boto-code" class="text-neutral-300 text-sm font-mono leading-relaxed">
+<span class="text-pink-400">import</span> boto3
+
+s3 = boto3.client(<span class="text-green-400">'s3'</span>,
+    endpoint_url=<span class="text-green-400">'http://localhost:9000'</span>,
+    aws_access_key_id=<span class="text-green-400">'minioadmin'</span>,
+    aws_secret_access_key=<span class="text-green-400">'minioadmin'</span>
+)
+
+<span class="text-neutral-500"># Create a bucket</span>
+s3.create_bucket(Bucket=<span class="text-green-400">'test'</span>)
+
+<span class="text-neutral-500"># Upload an object</span>
+s3.put_object(Bucket=<span class="text-green-400">'test'</span>, Key=<span class="text-green-400">'hello.txt'</span>, Body=<span class="text-blue-400">b'world'</span>)
+
+<span class="text-neutral-500"># Download and read</span>
+<span class="text-pink-400">print</span>(s3.get_object(Bucket=<span class="text-green-400">'test'</span>, Key=<span class="text-green-400">'hello.txt'</span>)[<span class="text-green-400">'Body'</span>].read())
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-neutral-200">
+
+        <!-- FAQ -->
+        <section id="faq">
+            <h2 class="text-3xl font-bold mb-8">FAQs</h2>
+            
+            <div class="space-y-4">
+                <!-- FAQ Item: What is Z3? -->
+                <details class="group bg-white rounded-2xl border border-neutral-200 shadow-sm transition-all duration-300">
+                    <summary class="flex items-center justify-between cursor-pointer p-6 text-lg font-bold text-neutral-900 list-none [&::-webkit-details-marker]:hidden">
+                        <span>What is Z3?</span>
+                        <span class="transition duration-300 group-open:rotate-45 text-neutral-400 group-hover:text-neutral-900 relative w-6 h-6 flex items-center justify-center">
+                            <span class="absolute w-4 h-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90"></span>
+                            <span class="absolute h-4 w-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90 group-open:opacity-0"></span>
+                        </span>
+                    </summary>
+                    <p class="text-neutral-600 leading-relaxed px-6 pb-6 -mt-2">Z3 is a minimalist S3 server in Zig, built for local development and testing.</p>
+                </details>
+
+                <!-- FAQ Item: Is Z3 distributed? -->
+                <details class="group bg-white rounded-2xl border border-neutral-200 shadow-sm transition-all duration-300">
+                    <summary class="flex items-center justify-between cursor-pointer p-6 text-lg font-bold text-neutral-900 list-none [&::-webkit-details-marker]:hidden">
+                        <span>Is Z3 distributed?</span>
+                        <span class="transition duration-300 group-open:rotate-45 text-neutral-400 group-hover:text-neutral-900 relative w-6 h-6 flex items-center justify-center">
+                            <span class="absolute w-4 h-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90"></span>
+                            <span class="absolute h-4 w-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90 group-open:opacity-0"></span>
+                        </span>
+                    </summary>
+                    <p class="text-neutral-600 leading-relaxed px-6 pb-6 -mt-2">No. Z3 is, and will remain, a single-node server optimized for local development and testing.</p>
+                </details>
+
+                <!-- FAQ Item: Is Z3 ready for production use? -->
+                <details class="group bg-white rounded-2xl border border-neutral-200 shadow-sm transition-all duration-300">
+                    <summary class="flex items-center justify-between cursor-pointer p-6 text-lg font-bold text-neutral-900 list-none [&::-webkit-details-marker]:hidden">
+                        <span>Is Z3 ready for production use?</span>
+                        <span class="transition duration-300 group-open:rotate-45 text-neutral-400 group-hover:text-neutral-900 relative w-6 h-6 flex items-center justify-center">
+                            <span class="absolute w-4 h-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90"></span>
+                            <span class="absolute h-4 w-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90 group-open:opacity-0"></span>
+                        </span>
+                    </summary>
+                    <p class="text-neutral-600 leading-relaxed px-6 pb-6 -mt-2">No. Z3 is in the early stages of active development.</p>
+                </details>
+
+                <!-- FAQ Item: Why Zig? -->
+                <details class="group bg-white rounded-2xl border border-neutral-200 shadow-sm transition-all duration-300">
+                    <summary class="flex items-center justify-between cursor-pointer p-6 text-lg font-bold text-neutral-900 list-none [&::-webkit-details-marker]:hidden">
+                        <span>Why Zig?</span>
+                        <span class="transition duration-300 group-open:rotate-45 text-neutral-400 group-hover:text-neutral-900 relative w-6 h-6 flex items-center justify-center">
+                            <span class="absolute w-4 h-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90"></span>
+                            <span class="absolute h-4 w-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90 group-open:opacity-0"></span>
+                        </span>
+                    </summary>
+                    <p class="text-neutral-600 leading-relaxed px-6 pb-6 -mt-2">Zig compiles to tiny, fast binaries, giving Z3 near-instant boot times and minimal memory usage.</p>
+                </details>
+
+                <!-- FAQ Item: How can I contribute? -->
+                <details class="group bg-white rounded-2xl border border-neutral-200 shadow-sm transition-all duration-300">
+                    <summary class="flex items-center justify-between cursor-pointer p-6 text-lg font-bold text-neutral-900 list-none [&::-webkit-details-marker]:hidden">
+                        <span>How can I contribute?</span>
+                        <span class="transition duration-300 group-open:rotate-45 text-neutral-400 group-hover:text-neutral-900 relative w-6 h-6 flex items-center justify-center">
+                            <span class="absolute w-4 h-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90"></span>
+                            <span class="absolute h-4 w-0.5 bg-current rounded-full transition-transform duration-300 group-open:rotate-90 group-open:opacity-0"></span>
+                        </span>
+                    </summary>
+                    <p class="text-neutral-600 leading-relaxed px-6 pb-6 -mt-2">Z3 is MIT-licensed. Visit the <a href="https://github.com/getz3/z3" class="text-zig hover:underline font-medium">GitHub repository</a> to submit bug reports, feature requests, or pull requests.</p>
+                </details>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-neutral-200 mt-12 py-12">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-zig rounded flex items-center justify-center text-white font-bold text-xs leading-none pt-0.5">Z</div>
+                <span class="font-semibold text-neutral-900">Z3 Project</span>
+            </div>
+            <p class="text-neutral-500 text-sm">
+                Open source under the <a href="https://github.com/getz3/z3" class="text-neutral-900 hover:text-zig transition-colors">MIT License</a>. Written in Zig.
+            </p>
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/getz3/z3" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+                    <span class="sr-only">GitHub</span>
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Copy to Clipboard Logic -->
+    <script>
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-code');
+                const codeBlock = document.getElementById(targetId);
+                
+                // Extract plain text without HTML tags
+                const text = codeBlock.innerText;
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    // Visual feedback
+                    const originalHTML = button.innerHTML;
+                    button.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                    button.classList.add('text-green-400');
+                    button.classList.remove('text-neutral-400');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('text-green-400');
+                        button.classList.add('text-neutral-400');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

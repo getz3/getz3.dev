@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+:root {
+  --ui-radius: 0.5rem;
+
+  /* Warm-dark palette, built around the Z3 logo (amber + taupe). */
+  --site-bg: #14110d;
+  --site-surface: #1c1813;
+  --site-elevated: #221d16;
+  --site-border: rgba(255, 170, 59, 0.14);
+  --site-ink: #f1ece3;
+  --site-muted: #a39b8d;
+  --site-faint: #7c746a;
+  --site-zig: #ffaa3b;
+  --site-taupe: #75716d;
+}
+
+html {
+  background: var(--site-bg);
+  color: var(--site-ink);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Liberation Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  background: radial-gradient(60rem 32rem at 50% -8rem, rgba(255, 170, 59, 0.12), transparent 70%), var(--site-bg);
+}
+
+@layer components {
+  .site-container {
+    width: min(100% - 2rem, 1120px);
+    margin-inline: auto;
+  }
+
+  /* Dark terminal / code panel used in quick-start and usage sections. */
+  .code-panel {
+    border: 1px solid var(--site-border);
+    border-radius: var(--ui-radius);
+    background: #0f0d0a;
+  }
+}
+
+/* Lightweight syntax tokens for code blocks. */
+.tok-comment {
+  color: var(--site-faint);
+}
+
+.tok-string {
+  color: #bccb9a;
+}
+
+.tok-keyword {
+  color: var(--site-zig);
+}
+
+.tok-flag {
+  color: #93a4ad;
+}
+
+/* Slim, on-brand scrollbar for horizontally scrolling code. */
+.code-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 170, 59, 0.25) transparent;
+}
+
+.code-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 170, 59, 0.18);
+  border-radius: 9999px;
+}
+
+.code-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 170, 59, 0.32);
+}
