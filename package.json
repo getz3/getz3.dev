@@ -7,7 +7,7 @@
     "node": "^22.0.0"
   },
   "scripts": {
-    "dev": "nuxt dev --host",
+    "dev": "mkdir -p /tmp/z3 && TMPDIR=/tmp/z3 nuxt dev --host",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "generate:staging": "NUXT_PUBLIC_SITE_URL=https://staging.getz3.dev ROBOTS_SITE_ENV=staging nuxt generate",
