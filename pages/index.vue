@@ -196,7 +196,7 @@ useSeoMeta({
               lg:text-7xl
             "
           >
-            Minimalist S3 server in Zig with No AI slop.
+            Minimalist S3 Server in Zig with No AI Slop.
           </h1>
 
           <div
@@ -348,7 +348,7 @@ useSeoMeta({
             Capabilities
           </h2>
           <p class="mt-3 text-(--site-muted)">
-            A subset of the AWS S3 REST API, with more on the way. Z3 is in active early development.
+            A subset of the AWS S3 API, with more on the way. Z3 is in active early development.
           </p>
         </div>
 
@@ -423,7 +423,7 @@ useSeoMeta({
               mt-0.5 size-4 shrink-0 text-(--site-faint)
             "
           />
-          TLS is not included — terminate HTTPS with a reverse proxy such as nginx or caddy.
+          TLS is not included — terminate HTTPS with a reverse proxy such as nginx or haproxy.
         </p>
       </section>
 
