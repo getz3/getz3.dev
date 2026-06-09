@@ -10,24 +10,19 @@ const navLinks = [
 
 const features = [
   {
+    icon: 'lucide:maximize-2',
+    title: 'Small',
+    body: 'Extremely small boot footprint, using less than 2MB of memory.',
+  },
+  {
     icon: 'lucide:zap',
-    title: 'Tiny & Fast',
-    body: 'A single small binary built in Zig, running on the zio async coroutine runtime.',
+    title: 'Fast',
+    body: 'Blazing-fast performance powered by Zig and Async ZIO.',
   },
   {
-    icon: 'lucide:shield-check',
-    title: 'SigV4 Compatible',
-    body: 'Full AWS Signature V4 auth — works with aws-cli, boto3, and major S3 SDKs.',
-  },
-  {
-    icon: 'lucide:boxes',
-    title: 'Core S3 API',
-    body: 'Buckets and objects, ListObjectsV2, multipart uploads, range requests, batch delete.',
-  },
-  {
-    icon: 'lucide:workflow',
-    title: 'Simple by Design',
-    body: 'A polyrole finite-state-machine core with plain file-backed local storage.',
+    icon: 'lucide:sparkles',
+    title: 'Clean',
+    body: 'Built on a multi-role finite state machine with no AI slop.',
   },
 ]
 
@@ -92,13 +87,6 @@ const underDevelopment = [
   'Pre-signed URLs',
   'Object tagging',
   'Encryption',
-]
-
-const projectLinks = [
-  { icon: 'lucide:github', label: 'Source Code', desc: 'github.com/getz3/z3', href: repoUrl },
-  { icon: 'lucide:book-open', label: 'API Reference', desc: 'Supported S3 endpoints', href: `${repoUrl}/blob/main/api.md` },
-  { icon: 'simple-icons:zig', label: 'Zig', desc: 'The language Z3 is written in', href: 'https://ziglang.org/' },
-  { icon: 'lucide:scale', label: 'MIT License', desc: '© 2026 EMQ Technologies Inc.', href: `${repoUrl}/blob/main/LICENSE.txt` },
 ]
 
 const faqs = [
@@ -280,8 +268,7 @@ useSeoMeta({
           class="
             grid gap-px overflow-hidden rounded-xl border border-(--site-border)
             bg-(--site-border)
-            sm:grid-cols-2
-            lg:grid-cols-4
+            md:grid-cols-3
           "
         >
           <div
@@ -481,46 +468,6 @@ useSeoMeta({
         </div>
 
         <UAccordion :items="faqs" />
-      </section>
-
-      <!-- Project links -->
-      <section class="site-container py-16">
-        <div
-          class="
-            grid gap-px overflow-hidden rounded-xl border border-(--site-border)
-            bg-(--site-border)
-            sm:grid-cols-2
-            lg:grid-cols-4
-          "
-        >
-          <a
-            v-for="link in projectLinks"
-            :key="link.href"
-            :href="link.href"
-            target="_blank"
-            rel="noreferrer"
-            class="
-              group flex flex-col bg-(--site-surface) p-6 transition-colors
-              hover:bg-(--site-elevated)
-            "
-          >
-            <div class="flex items-center justify-between">
-              <UIcon :name="link.icon" class="size-5 text-(--site-zig)" />
-              <UIcon
-                name="lucide:arrow-up-right" class="
-                  size-4 text-(--site-faint) transition-colors
-                  group-hover:text-(--site-ink)
-                "
-              />
-            </div>
-            <h3 class="mt-4 font-semibold">
-              {{ link.label }}
-            </h3>
-            <p class="mt-1 text-sm text-(--site-muted)">
-              {{ link.desc }}
-            </p>
-          </a>
-        </div>
       </section>
     </main>
 
