@@ -60,4 +60,4 @@ Use these rules when changing the Z3 website UI.
 
 - Keep copy accurate for Z3: minimalist S3-compatible server in Zig, useful for local development and testing.
 - Do not imply Z3 is production-ready, distributed, or a full S3 replacement unless the upstream project changes.
-- Keep examples aligned with defaults used on the page: localhost endpoint and `minioadmin` credentials.
+- Keep examples aligned with defaults used on the page: localhost endpoint and `z3admin` credentials.

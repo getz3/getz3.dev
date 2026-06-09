@@ -167,7 +167,7 @@
                 </div>
                 <div class="p-4 bg-white rounded-lg border border-neutral-200 shadow-sm">
                     <span class="block text-neutral-500 mb-1">Default Credentials</span>
-                    <strong class="text-neutral-900 font-mono">minioadmin / minioadmin</strong>
+                    <strong class="text-neutral-900 font-mono">z3admin / z3admin</strong>
                 </div>
             </div>
         </section>
@@ -194,8 +194,8 @@
                         </div>
                         <div class="p-5 overflow-x-auto">
 <pre id="aws-cli-code" class="text-neutral-300 text-sm font-mono leading-relaxed">
-<span class="text-pink-400">export</span> AWS_ACCESS_KEY_ID=minioadmin
-<span class="text-pink-400">export</span> AWS_SECRET_ACCESS_KEY=minioadmin
+<span class="text-pink-400">export</span> AWS_ACCESS_KEY_ID=z3admin
+<span class="text-pink-400">export</span> AWS_SECRET_ACCESS_KEY=z3admin
 
 <span class="text-neutral-500"># Create a bucket</span>
 aws --endpoint-url http://localhost:9000 s3 mb s3://mybucket
@@ -235,8 +235,8 @@ aws --endpoint-url http://localhost:9000 s3 rm s3://mybucket/file.txt
 
 s3 = boto3.client(<span class="text-green-400">'s3'</span>,
     endpoint_url=<span class="text-green-400">'http://localhost:9000'</span>,
-    aws_access_key_id=<span class="text-green-400">'minioadmin'</span>,
-    aws_secret_access_key=<span class="text-green-400">'minioadmin'</span>
+    aws_access_key_id=<span class="text-green-400">'z3admin'</span>,
+    aws_secret_access_key=<span class="text-green-400">'z3admin'</span>
 )
 
 <span class="text-neutral-500"># Create a bucket</span>
