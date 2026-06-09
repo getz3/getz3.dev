@@ -196,16 +196,8 @@ useSeoMeta({
               lg:text-7xl
             "
           >
-            Minimalist S3 Server in Zig.
+            Minimalist S3 server in Zig with No AI slop.
           </h1>
-
-          <p class="mt-6 max-w-2xl text-lg/8 text-(--site-muted)">
-            Z3 is a tiny, fast S3 server with full AWS SigV4 auth and no AI. It works with
-            <code class="text-(--site-ink)">aws-cli</code>, <code
-              class="text-(--site-ink)"
-            >boto3</code>,
-            and major SDKs — ideal for S3 development and testing.
-          </p>
 
           <div
             class="
